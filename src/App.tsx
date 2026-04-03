@@ -333,6 +333,8 @@ function App() {
         onReverbChange={(value) => updatePattern("reverb", value)}
         onMasterVolumeChange={(value) => updatePattern("masterVolume", value)}
       />
+
+      <p className="app-credit">by Haruki Nakao</p>
     </main>
   );
 }

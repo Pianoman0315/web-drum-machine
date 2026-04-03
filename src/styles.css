@@ -49,6 +49,18 @@ button {
   grid-template-rows: auto 1fr auto;
   gap: 16px;
   transform: translateX(-50px);
+  position: relative;
+}
+
+.app-credit {
+  position: absolute;
+  right: -24px;
+  bottom: 2px;
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.88);
+  pointer-events: none;
 }
 
 .top-bar,
@@ -584,5 +596,10 @@ input[type="range"] {
   .file-header p,
   .range-value {
     font-size: 0.72rem;
+  }
+
+  .app-credit {
+    right: -48px;
+    bottom: 2px;
   }
 }
