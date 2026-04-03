@@ -89,7 +89,13 @@ function App() {
         audioEngine.stopTrack("O-Hat", Tone.now());
       }
       audioEngine.triggerTrack(track.name, Tone.now());
-    } catch (error) {
+      } catch (error) {
+        console.error("Pattern load failed", error);
+        window.alert(
+          error instanceof Error
+            ? `読み込みに失敗しました: ${error.message}`
+            : "読み込みに失敗しました。",
+        );
       console.error("Track preview failed", error);
     }
   };
@@ -228,6 +234,22 @@ function App() {
     }));
   };
 
+  const readFileAsText = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const result = typeof reader.result === "string" ? reader.result : "";
+        resolve(result.replace(/^\uFEFF/, ""));
+      };
+
+      reader.onerror = () => {
+        reject(new Error("ファイルを読み込めませんでした。"));
+      };
+
+      reader.readAsText(file);
+    });
+
   const savePattern = () => {
     const blob = createPatternBlob({
       ...pattern,
@@ -237,7 +259,7 @@ function App() {
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = "pattern.drmpat";
+    link.download = "pattern.json";
     link.click();
 
     URL.revokeObjectURL(url);
@@ -246,11 +268,21 @@ function App() {
 
   const loadPattern = async (file: File) => {
     try {
-      const text = await file.text();
+      const text = await readFileAsText(file);
       const parsed = JSON.parse(text) as unknown;
       const nextPattern = validatePatternFile(parsed);
+      Tone.Transport.stop();
+      if (loopIdRef.current !== null) {
+        Tone.Transport.clear(loopIdRef.current);
+        loopIdRef.current = null;
+      }
+      patternRef.current = nextPattern;
+      mutedTracksRef.current = nextPattern.mutedTracks;
       setPattern(nextPattern);
       setMutedTracks(nextPattern.mutedTracks);
+      setCurrentStep(-1);
+      setIsPlaying(false);
+      window.alert(`${file.name} を読み込みました。`);
       setStatusMessage(`${file.name} を読み込みました。`);
     } catch (error) {
       setStatusMessage(
