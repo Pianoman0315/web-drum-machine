@@ -1,5 +1,11 @@
 import { PatternFile, TRACK_NAMES, TrackPattern } from "../types";
-import { MAX_BPM, MIN_BPM, STEP_COUNT, createDefaultPattern } from "../data/defaultPattern";
+import {
+  MAX_BPM,
+  MIN_BPM,
+  STEP_COUNT,
+  createDefaultMutedTracks,
+  createDefaultPattern,
+} from "../data/defaultPattern";
 
 const isTrackPattern = (value: unknown): value is TrackPattern => {
   if (!value || typeof value !== "object") {
@@ -71,6 +77,7 @@ export const validatePatternFile = (value: unknown): PatternFile => {
     masterVolume: candidate.masterVolume,
     filter: candidate.filter,
     reverb: candidate.reverb,
+    mutedTracks: createDefaultMutedTracks(),
     tracks: orderedTracks,
   };
 };
