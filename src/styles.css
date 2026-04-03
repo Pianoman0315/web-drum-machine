@@ -1,6 +1,10 @@
 :root {
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
   color: #f9f3dc;
+  --track-controls-width: 130px;
+  --step-size: 36px;
+  --step-gap: 6px;
+  --step-group-gap: 12px;
   background:
     radial-gradient(circle at top left, rgba(255, 169, 77, 0.25), transparent 32%),
     linear-gradient(135deg, #27160d 0%, #41261c 48%, #1f1715 100%);
@@ -128,7 +132,7 @@ h1 {
 .step-number-row,
 .track-row {
   display: grid;
-  grid-template-columns: 130px 1fr;
+  grid-template-columns: var(--track-controls-width) 1fr;
   gap: 10px;
   align-items: center;
 }
@@ -208,22 +212,22 @@ h1 {
 .step-grid {
   display: flex;
   flex-wrap: nowrap;
-  gap: 6px;
+  gap: var(--step-gap);
 }
 
 .step-grid > *:nth-child(4n):not(:last-child) {
-  margin-right: 12px;
+  margin-right: var(--step-group-gap);
 }
 
 .step-number {
-  flex: 0 0 36px;
+  flex: 0 0 var(--step-size);
   text-align: center;
   font-size: 0.74rem;
   color: #bf9e77;
 }
 
 .step-button {
-  flex: 0 0 36px;
+  flex: 0 0 var(--step-size);
   height: 52px;
   border: 1px solid rgba(255, 217, 166, 0.18);
   border-radius: 14px;
@@ -424,14 +428,161 @@ input[type="range"] {
   accent-color: #ffb253;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1366px) and (pointer: coarse) and (orientation: landscape) {
   body {
     min-width: auto;
     min-height: auto;
+    overflow: hidden;
   }
 
   .app-shell {
+    width: min(100vw, 1024px);
+    min-height: 100dvh;
+    padding: 14px;
+    gap: 4px;
+    transform: translateX(-34px);
+  }
+
+  .top-bar {
+    align-items: start;
+    min-height: 0;
+    gap: 0;
+  }
+
+  .top-bar h1 {
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  .workspace-layout {
     width: 100%;
-    min-height: 100vh;
+    margin-top: 0;
+    grid-template-columns: 1fr 210px;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .sequencer-panel,
+  .control-panel {
+    transform: translateX(-16px);
+  }
+
+  .file-panel {
+    width: 100%;
+  }
+
+  .side-panel {
+    justify-self: end;
+    transform: none;
+  }
+
+  .sequencer-panel,
+  .file-panel,
+  .control-panel {
+    padding: 12px;
+  }
+
+  .sequencer-panel,
+  .file-panel {
+    gap: 6px;
+  }
+
+  .sequencer-panel .section-header {
+    margin-bottom: -10px;
+  }
+
+  .file-header {
+    margin-top: 8px;
+  }
+
+  .step-number-row {
+    margin-top: -2px;
+  }
+
+  .track-list {
+    margin-top: 0;
+  }
+
+  .sequencer-panel {
+    width: calc(100% - 18px);
+  }
+
+  .control-panel {
+    grid-template-columns: 140px repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: -8px;
+  }
+
+  .transport-toggle {
+    width: 74px;
+    height: 74px;
+    border-radius: 20px;
+  }
+
+  .transport-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .transport-play-icon {
+    border-top-width: 13px;
+    border-bottom-width: 13px;
+    border-left-width: 20px;
+  }
+
+  .transport-stop-icon span {
+    width: 7px;
+    height: 24px;
+  }
+
+  .range-control {
+    gap: 6px;
+  }
+
+  :root {
+    --track-controls-width: 112px;
+    --step-size: 30px;
+    --step-gap: 4px;
+    --step-group-gap: 8px;
+  }
+
+  .track-controls {
+    gap: 6px;
+  }
+
+  .track-list {
+    gap: 8px;
+  }
+
+  .track-name-button {
+    padding: 6px 8px;
+    font-size: 0.92rem;
+  }
+
+  .mute-button {
+    width: 28px;
+    height: 28px;
+  }
+
+  .step-button {
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .step-number {
+    font-size: 0.68rem;
+  }
+
+  .file-actions {
+    gap: 8px;
+  }
+
+  .file-button {
+    padding: 10px 12px;
+  }
+
+  .file-header p,
+  .range-value {
+    font-size: 0.72rem;
   }
 }

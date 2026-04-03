@@ -159,7 +159,7 @@ function App() {
   };
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const shouldHandleGlobalSpace = (event: KeyboardEvent) => {
       const target = event.target;
 
       if (
@@ -168,10 +168,18 @@ function App() {
         target instanceof HTMLSelectElement ||
         (target instanceof HTMLElement && target.isContentEditable)
       ) {
-        return;
+        return false;
       }
 
-      if (event.code !== "Space" || event.repeat) {
+      if (event.code !== "Space") {
+        return false;
+      }
+
+      return true;
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!shouldHandleGlobalSpace(event) || event.repeat) {
         return;
       }
 
@@ -196,8 +204,21 @@ function App() {
       void startPlayback();
     };
 
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (!shouldHandleGlobalSpace(event)) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
     window.addEventListener("keydown", handleKeyDown, true);
-    return () => window.removeEventListener("keydown", handleKeyDown, true);
+    window.addEventListener("keyup", handleKeyUp, true);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown, true);
+      window.removeEventListener("keyup", handleKeyUp, true);
+    };
   }, [isPlaying]);
 
   const updatePattern = <K extends keyof PatternFile>(key: K, value: PatternFile[K]) => {
