@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { StepButton } from "./StepButton";
 import { TrackPattern } from "../types";
 
@@ -18,13 +19,45 @@ export function TrackRow({
   onToggleMute,
   onToggleStep,
 }: TrackRowProps) {
+  const skipClickRef = useRef(false);
+
   return (
     <div className="track-row">
       <div className="track-controls">
         <button
           type="button"
           className="track-name-button"
-          onClick={onPreviewTrack}
+          onPointerDown={(event) => {
+            if (event.pointerType === "touch" || event.pointerType === "pen") {
+              const rect = event.currentTarget.getBoundingClientRect();
+              const offsetX = event.clientX - rect.left;
+              const offsetY = event.clientY - rect.top;
+              const safeInsetX = 6;
+              const safeInsetY = 4;
+              if (
+                offsetX < safeInsetX ||
+                offsetX > rect.width - safeInsetX ||
+                offsetY < safeInsetY ||
+                offsetY > rect.height - safeInsetY
+              ) {
+                skipClickRef.current = true;
+                event.preventDefault();
+                return;
+              }
+
+              skipClickRef.current = true;
+              event.preventDefault();
+              onPreviewTrack();
+            }
+          }}
+          onClick={() => {
+            if (skipClickRef.current) {
+              skipClickRef.current = false;
+              return;
+            }
+
+            onPreviewTrack();
+          }}
           aria-label={`${track.name} preview`}
         >
           {track.name}

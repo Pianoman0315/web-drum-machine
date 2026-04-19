@@ -127,6 +127,16 @@ export function ControlStrip({
       />
 
       <RangeControl
+        label="Volume"
+        value={masterVolume}
+        min={0}
+        max={1}
+        step={0.01}
+        displayValue={`${Math.round(masterVolume * 100)}%`}
+        onChange={onMasterVolumeChange}
+      />
+
+      <RangeControl
         label="Reverb"
         value={reverb}
         min={0}
@@ -134,16 +144,6 @@ export function ControlStrip({
         step={0.01}
         displayValue={`${Math.round(reverb * 100)}%`}
         onChange={onReverbChange}
-      />
-
-      <RangeControl
-        label="Master"
-        value={masterVolume}
-        min={0}
-        max={1}
-        step={0.01}
-        displayValue={`${Math.round(masterVolume * 100)}%`}
-        onChange={onMasterVolumeChange}
       />
     </section>
   );

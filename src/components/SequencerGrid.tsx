@@ -2,6 +2,7 @@ import { TrackName, TrackPattern } from "../types";
 import { TrackRow } from "./TrackRow";
 
 type SequencerGridProps = {
+  className?: string;
   tracks: TrackPattern[];
   currentStep: number;
   mutedTracks: Record<TrackName, boolean>;
@@ -11,6 +12,7 @@ type SequencerGridProps = {
 };
 
 export function SequencerGrid({
+  className = "",
   tracks,
   currentStep,
   mutedTracks,
@@ -18,12 +20,27 @@ export function SequencerGrid({
   onToggleMute,
   onToggleStep,
 }: SequencerGridProps) {
-  const reversedTracks = [...tracks]
+  const displayOrder: TrackName[] = [
+    "Cow",
+    "Tom 1",
+    "Tom 2",
+    "O-Hat",
+    "C-Hat",
+    "Clap",
+    "Snare",
+    "Bass",
+    "Accent",
+  ];
+
+  const orderedTracks = [...tracks]
     .map((track, trackIndex) => ({ track, trackIndex }))
-    .reverse();
+    .sort(
+      (left, right) =>
+        displayOrder.indexOf(left.track.name) - displayOrder.indexOf(right.track.name),
+    );
 
   return (
-    <section className="panel sequencer-panel">
+    <section className={`panel sequencer-panel ${className}`.trim()}>
       <div className="section-header">
         <h2>Pattern</h2>
       </div>
@@ -40,7 +57,7 @@ export function SequencerGrid({
       </div>
 
       <div className="track-list">
-        {reversedTracks.map(({ track, trackIndex }) => (
+        {orderedTracks.map(({ track, trackIndex }) => (
           <TrackRow
             key={track.name}
             track={track}
