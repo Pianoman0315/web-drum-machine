@@ -71,6 +71,7 @@ export const validatePatternFile = (value: unknown): PatternFile => {
     masterVolume: candidate.masterVolume,
     filter: candidate.filter,
     reverb: candidate.reverb,
+    mutedTracks: candidate.mutedTracks ?? defaults.mutedTracks,
     tracks: orderedTracks,
   };
 };
